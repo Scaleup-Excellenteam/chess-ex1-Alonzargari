@@ -1,12 +1,11 @@
 #include "BoardManager.h"
 #include "designPatterns/factory/PieceFactory.h"
 
-BoardManager::BoardManager(const std::string& board):
-	m_board{ board }//, const std::string& piecePostionInput,
-						   //const std::string& pieceDestinitionInput):
-	//m_piecePositionInput{piecePostionInput},m_pieceDestinitionInput{pieceDestinitionInput}
+BoardManager::BoardManager(const std::string& board,const std::string& input):
+	m_board{ board }
 {
-	//initBoard(board);
+	m_pieceCurrentPosInput = { input[0],input[1] };
+	m_pieceDestinitionInput = { input[2],input[3] };
 	initPieceVector();
 }
 

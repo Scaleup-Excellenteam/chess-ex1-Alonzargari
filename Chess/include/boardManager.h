@@ -5,7 +5,7 @@
 
 class BoardManager {
 public:
-	BoardManager(const std::string& board);//, const std::string& Input, const std::string& pieceDestinitionInput);
+	BoardManager(const std::string& board,const std::string& input);
 	void manageMovment();
 private:
 	void initPieceVector();
