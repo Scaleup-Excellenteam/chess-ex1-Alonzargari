@@ -7,10 +7,9 @@ int main()
 //	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
 	string board = "##########R#####r#########################R#####################";
 	Chess a(board);
-	auto boardManger = BoardManager(board);
-	boardManger.manageMovment();
 	int codeResponse = 0;
 	string res = a.getInput();
+	auto boardManger = BoardManager(board);
 	while (res != "exit")
 	{
 		/* 
@@ -29,9 +28,9 @@ int main()
 
 		/**/ 
 		{ // put your code here instead that code
-			//cout << res << endl;
+			codeResponse=boardManger.manageMovment(res);
 			cout << "code response >> ";
-			cin >> codeResponse;
+			//cin >> codeResponse;
 		}
 		/**/
 

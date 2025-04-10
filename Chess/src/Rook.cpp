@@ -25,7 +25,7 @@ bool Rook::doMove(std::string destinyPos)
 	auto desYpos = destinyPos[0];
 	
 	if (curXpos == desXpos || curYpos == desYpos) {
-		setPosition(destinyPos);
+		return true;
 	}
 	return false;
 }
