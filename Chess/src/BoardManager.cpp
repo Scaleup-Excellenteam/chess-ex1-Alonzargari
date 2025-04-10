@@ -1,9 +1,12 @@
 #include "BoardManager.h"
 #include "designPatterns/factory/PieceFactory.h"
 
+
 BoardManager::BoardManager(const std::string& board):
 	m_currentColorTurn{ "White" }
 {
+	m_blackKing = nullptr;
+	m_whiteKing = nullptr;
 	initPieceVector(board);
 }
 
@@ -23,7 +26,10 @@ int BoardManager::manageMovment(const std::string& input)
 		if (piece->getPosition() == pieceCurrentPosInput)
 		{
 			if (piece->getTeamColor() == m_currentColorTurn) {
-				if (piece->doMove(pieceDestinitionInput)){//בהמשך && KingNotThreat()) {
+				if (piece->doMove(pieceDestinitionInput)){
+					if (exposeToCheck()) {
+						return codeResponse = 31;
+					}
 					piece->setPosition(pieceDestinitionInput);
 					m_currentColorTurn = piece->getTeamColor()=="White" ? "Black": "White";
 					return codeResponse = 42;
@@ -36,6 +42,21 @@ int BoardManager::manageMovment(const std::string& input)
 	return codeResponse = 11;
 }
 
+void BoardManager::removePieceIfEaten()
+{
+	for (const auto& piece1 : m_pieces) {
+		for (const auto& piece2 : m_pieces) {
+			if(piece1->getPosition()==piece2->getPosition() && 
+				piece1->getTeamColor() != piece2->getTeamColor())
+			{
+				piece1->getTeamColor() == m_currentColorTurn ? piece2->setToErase() : piece1->setToErase();
+			}
+		}
+	}
+	m_pieces.erase(std::remove_if(m_pieces.begin(),m_pieces.end(), 
+		[](const auto& piece) { return piece->toErase();}),m_pieces.end());
+}
+
 void BoardManager::initPieceVector(const std::string& board)
 {
 	int row = 0;
@@ -45,10 +66,45 @@ void BoardManager::initPieceVector(const std::string& board)
 		if (auto piece = PieceFactory::createPiece(board[index],curPos)) {
 			m_pieces.emplace_back(std::move(piece));
 		}
+		if (board[index] == 'K') {
+			m_whiteKing=new King(curPos, "White");
+			m_pieces.emplace_back(std::make_unique<King>(curPos, "White"));
+		}
+		if (board[index] == 'k') {
+			m_blackKing = new King(curPos, "Black");
+			m_pieces.emplace_back(std::make_unique<King>(curPos, "Black"));
+		}
 		if ((index + 1) % 8 == 0) {
 			row++;
 		}
 		index++;
 	}
+}
+
+bool BoardManager::exposeToCheck()
+{
+	for (const auto& piece : m_pieces) {
+		if (m_whiteKing) {
+			if (piece->getPosition() == m_whiteKing->getPosition()) {
+				continue;
+			}
+			if (piece->getTeamColor() != m_currentColorTurn
+				&& piece->doMove(m_whiteKing->getPosition())) {
+				return true;
+			}
+		}
+			
+		if (m_blackKing) {
+			if(piece->getPosition() == m_blackKing->getPosition())
+			{
+				continue;
+			}
+			if (piece->getTeamColor() != m_currentColorTurn
+				&& piece->doMove(m_blackKing->getPosition())) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 

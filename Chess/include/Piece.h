@@ -11,9 +11,12 @@ public:
 	std::string getTeamColor() const;
 	void setLastPosition(std::string position);
 	void setPosition(const std::string&);
+	void setToErase();
+	bool toErase()const;
 private:
 	static bool m_register;
 	std::string m_lastPosition;
 	std::string m_currentPosition;
 	std::string m_teamColor;
+	bool m_toErase;
 };
