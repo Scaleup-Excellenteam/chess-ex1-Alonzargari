@@ -1,7 +1,19 @@
 #include "Rook.h"
+#include "designPatterns/factory/PieceFactory.h"
 
-Rook::Rook(std::string position):
-	Piece(position)
+bool Rook::m_register = PieceFactory::registerPiece('R',
+	[](std::string pos)->std::unique_ptr<Piece> {
+		return std::make_unique<Rook>(pos, "White");
+	})
+	&&
+	PieceFactory::registerPiece('r',
+	[](std::string pos)->std::unique_ptr<Piece> {
+		return std::make_unique<Rook>(pos, "Black");
+	});
+
+
+Rook::Rook(std::string position,std::string teamColor):
+	Piece(position,teamColor)
 {
 }
 

@@ -9,7 +9,7 @@ using pieceMap = std::map<char, pieceFunc>;
 
 class PieceFactory {
 public:
-	std::unique_ptr<Piece>& createPiece(char pieceSymbole,std::string position);
+	static std::unique_ptr<Piece> createPiece(char pieceSymbole,std::string position);
 	static bool registerPiece(char, pieceFunc);
 private:
 	static pieceMap& getPieceMap();

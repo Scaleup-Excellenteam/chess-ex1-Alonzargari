@@ -1,11 +1,14 @@
 // Chess 
 #include "Chess.h"
+#include "BoardManager.h"
 
 int main()
 {
-	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-//	string board = "##########K###############################R#############r#r#####";
+//	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
+	string board = "##########R#####r#########################R#####################";
 	Chess a(board);
+	auto boardManger = BoardManager(board);
+	boardManger.manageMovment();
 	int codeResponse = 0;
 	string res = a.getInput();
 	while (res != "exit")
@@ -26,6 +29,7 @@ int main()
 
 		/**/ 
 		{ // put your code here instead that code
+			//cout << res << endl;
 			cout << "code response >> ";
 			cin >> codeResponse;
 		}
