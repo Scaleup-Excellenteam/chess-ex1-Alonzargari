@@ -32,3 +32,8 @@ bool Piece::toErase() const
 {
 	return m_toErase;
 }
+
+bool Piece::ignorePath() const
+{
+	return false;
+}

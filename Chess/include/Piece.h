@@ -13,6 +13,7 @@ public:
 	void setPosition(const std::string&);
 	void setToErase();
 	bool toErase()const;
+	virtual bool ignorePath() const;
 private:
 	static bool m_register;
 	std::string m_lastPosition;

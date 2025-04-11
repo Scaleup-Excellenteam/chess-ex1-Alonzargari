@@ -15,13 +15,17 @@ int BoardManager::manageMovment(const std::string& input)
 	int codeResponse = 0;
 	std::string pieceCurrentPosInput = { input[0],input[1] };
 	std::string  pieceDestinitionInput = { input[2],input[3] };
-
 	for (const auto& piece : m_pieces) {
 		if (piece->getPosition() == pieceDestinitionInput &&
-			piece->getTeamColor() == m_currentColorTurn|| 
-			!pathIsClear(pieceCurrentPosInput, pieceDestinitionInput))
+			piece->getTeamColor() == m_currentColorTurn)
 		{
 			return codeResponse = 13;
+		}
+		else if (piece->getPosition() == pieceCurrentPosInput&&!piece->ignorePath())
+		{
+			if (!pathIsClear(pieceCurrentPosInput, pieceDestinitionInput)) {
+				return codeResponse = 13;
+			}
 		}
 	}
 

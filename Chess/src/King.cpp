@@ -1,14 +1,4 @@
 #include "King.h"
-//#include "designPatterns/factory/PieceFactory.h"
-//bool King::m_register = PieceFactory::registerPiece('K',
-//	[](std::string pos)->std::unique_ptr<Piece> {
-//		return std::make_unique<King>(pos, "White");
-//	})
-//	&&
-//	PieceFactory::registerPiece('k',
-//	[](std::string pos)->std::unique_ptr<Piece> {
-//		return std::make_unique<King>(pos, "Black");
-//	});
 
 King::King(std::string position, std::string teamColor) :
 	Piece(position, teamColor)
