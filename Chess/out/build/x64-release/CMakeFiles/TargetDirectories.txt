@@ -1,0 +1,7 @@
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/CMakeFiles/Chess.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/CMakeFiles/edit_cache.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/CMakeFiles/rebuild_cache.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/include/CMakeFiles/edit_cache.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/include/CMakeFiles/rebuild_cache.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/src/CMakeFiles/edit_cache.dir
+C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release/src/CMakeFiles/rebuild_cache.dir

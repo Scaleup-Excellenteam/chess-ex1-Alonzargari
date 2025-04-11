@@ -15,7 +15,7 @@ King::King(std::string position, std::string teamColor) :
 {
 }
 
-bool King::doMove(std::string destinyPos)
+bool King::canMoveTo(std::string destinyPos)
 {
 	auto curXpos = getPosition()[1]-'0';
 	auto desXpos = destinyPos[1]-'0';

@@ -5,7 +5,7 @@
 class Piece {
 public:
 	Piece(std::string position,std::string teamColor);
-	virtual bool doMove(std::string destinyPos) = 0;
+	virtual bool canMoveTo (std::string destinyPos) = 0;
 	std::string getPosition() const;
 	std::string getLastPosition() const;
 	std::string getTeamColor() const;

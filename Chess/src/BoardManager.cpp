@@ -17,7 +17,8 @@ int BoardManager::manageMovment(const std::string& input)
 	std::string  pieceDestinitionInput = { input[2],input[3] };
 	for (const auto& piece : m_pieces) {
 		if (piece->getPosition() == pieceDestinitionInput &&
-			piece->getTeamColor() == m_currentColorTurn)
+			piece->getTeamColor() == m_currentColorTurn|| 
+			!pathIsClear(pieceCurrentPosInput, pieceDestinitionInput))
 		{
 			return codeResponse = 13;
 		}
@@ -26,11 +27,20 @@ int BoardManager::manageMovment(const std::string& input)
 		if (piece->getPosition() == pieceCurrentPosInput)
 		{
 			if (piece->getTeamColor() == m_currentColorTurn) {
-				if (piece->doMove(pieceDestinitionInput)){
-					if (exposeToCheck()) {
+				if (piece->canMoveTo(pieceDestinitionInput)){
+					piece->setPosition(pieceDestinitionInput);
+					King* king = (m_currentColorTurn == "White") ? m_whiteKing : m_blackKing;
+					if (exposeToCheck(king)) {
+						piece->setPosition(piece->getLastPosition());
 						return codeResponse = 31;
 					}
-					piece->setPosition(pieceDestinitionInput);
+					else {
+						King* king = (m_currentColorTurn == "White") ? m_blackKing : m_whiteKing;
+						if (king && pathIsClear(piece->getPosition(), king->getPosition())) {
+							return codeResponse = 41;
+						}
+					}
+					piece->setLastPosition(pieceDestinitionInput);
 					m_currentColorTurn = piece->getTeamColor()=="White" ? "Black": "White";
 					return codeResponse = 42;
 				}
@@ -81,30 +91,46 @@ void BoardManager::initPieceVector(const std::string& board)
 	}
 }
 
-bool BoardManager::exposeToCheck()
+bool BoardManager::exposeToCheck(const King* king)
 {
 	for (const auto& piece : m_pieces) {
-		if (m_whiteKing) {
-			if (piece->getPosition() == m_whiteKing->getPosition()) {
+		if (king) {
+			if (piece->getPosition() == king->getPosition()) {
 				continue;
 			}
-			if (piece->getTeamColor() != m_currentColorTurn
-				&& piece->doMove(m_whiteKing->getPosition())) {
-				return true;
-			}
-		}
-			
-		if (m_blackKing) {
-			if(piece->getPosition() == m_blackKing->getPosition())
+			else if (piece->getTeamColor() != m_currentColorTurn
+				&& pathIsClear(piece->getPosition(), king->getPosition()))
 			{
-				continue;
-			}
-			if (piece->getTeamColor() != m_currentColorTurn
-				&& piece->doMove(m_blackKing->getPosition())) {
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+bool BoardManager::pathIsClear(const std::string& curPos, const std::string& desPos) {
+
+	char curPosY = curPos[0];
+	char curPosX = curPos[1];
+	char desPosX = desPos[1];
+	char desPosY = desPos[0];
+
+	int direcrtionY = (desPosY > curPosY) ? 1 : (desPosY <curPosY) ? -1 : 0;
+	int direcrtionX = (desPosX > curPosX) ? 1 : (desPosX < curPosX) ? -1 : 0;
+
+	int currentX = curPosX + direcrtionX;
+	int currentY = curPosY + direcrtionY;
+
+	while (currentX != desPosX || currentY != desPosY) {
+		std::string pos = { char(currentY),char(currentX) };
+		for (const auto& piece : m_pieces) {
+			if (piece->getPosition()==pos) {
+				return false;
+			}
+		}
+		currentX += direcrtionX;
+		currentY += direcrtionY;
+	}
+	return true;
 }
 
