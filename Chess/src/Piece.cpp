@@ -1,7 +1,7 @@
 #include "Piece.h"
 
 Piece::Piece(std::string position,std::string teamColor):
-	m_currentPosition{position},m_lastPosition{position},m_teamColor{teamColor}
+	m_currentPosition{position},m_lastPosition{position},m_teamColor{teamColor},m_toErase{false}
 {
 }
 
@@ -21,4 +21,14 @@ void Piece::setLastPosition(std::string position) {
 void Piece::setPosition(const std::string& position)
 {
 	m_currentPosition = position;
+}
+
+void Piece::setToErase()
+{
+	m_toErase = true;
+}
+
+bool Piece::toErase() const
+{
+	return m_toErase;
 }

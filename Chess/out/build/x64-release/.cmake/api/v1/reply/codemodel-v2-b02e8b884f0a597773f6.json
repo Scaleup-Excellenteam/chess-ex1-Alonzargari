@@ -11,7 +11,7 @@
 						1,
 						2
 					],
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.15"
@@ -25,7 +25,7 @@
 				},
 				{
 					"build" : "include",
-					"jsonFile" : "directory-include-Debug-d173e0f0f2f3c2971879.json",
+					"jsonFile" : "directory-include-Release-d173e0f0f2f3c2971879.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.15"
@@ -36,7 +36,7 @@
 				},
 				{
 					"build" : "src",
-					"jsonFile" : "directory-src-Debug-c94b7c2814d5a21df52c.json",
+					"jsonFile" : "directory-src-Release-c94b7c2814d5a21df52c.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.15"
@@ -46,7 +46,7 @@
 					"source" : "src"
 				}
 			],
-			"name" : "Debug",
+			"name" : "Release",
 			"projects" : 
 			[
 				{
@@ -68,7 +68,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "Chess::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-Chess-Debug-b582147da88668633ba3.json",
+					"jsonFile" : "target-Chess-Release-0a9014308a457d01663c.json",
 					"name" : "Chess",
 					"projectIndex" : 0
 				}
@@ -78,7 +78,7 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-debug",
+		"build" : "C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess/out/build/x64-release",
 		"source" : "C:/Users/alon3/source/Advenced_cpp/ex1-chess-Alonzargari/Chess"
 	},
 	"version" : 

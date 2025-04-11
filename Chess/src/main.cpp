@@ -5,7 +5,7 @@
 int main()
 {
 //	string board = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr"; 
-	string board = "##########R#####r#########################R#####################";
+	string board = "##################K#######################R#############r#r#####";
 	Chess a(board);
 	int codeResponse = 0;
 	string res = a.getInput();
@@ -29,6 +29,7 @@ int main()
 		/**/ 
 		{ // put your code here instead that code
 			codeResponse=boardManger.manageMovment(res);
+			boardManger.removePieceIfEaten();
 			cout << "code response >> ";
 			//cin >> codeResponse;
 		}
