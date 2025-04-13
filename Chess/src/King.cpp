@@ -5,7 +5,7 @@ King::King(std::string position, std::string teamColor) :
 {
 }
 
-bool King::canMoveTo(std::string destinyPos)
+bool King::canDoStep(std::string destinyPos)
 {
 	auto curXpos = getPosition()[1]-'0';
 	auto desXpos = destinyPos[1]-'0';
@@ -24,7 +24,7 @@ bool King::canMoveTo(std::string destinyPos)
 	return false;
 }
 
-//bool King::isThreating(const Piece& King)
-//{
-//	return false;
-//}
+bool King::ignorePath()
+{
+	return true;
+}

@@ -14,6 +14,8 @@ private:
 	void initPieceVector(const std::string& board);
 	bool exposeToCheck(const King* king);
 	bool pathIsClear(const std::string& , const std::string& );
+	/*Piece* getPiece(std::string curPos);
+	void updatePiecePosition(const std::string& oldKey, const std::string& newKey);*/
 	std::string m_currentColorTurn;
 	std::vector<std::unique_ptr<Piece>>m_pieces;
 	King* m_whiteKing;

@@ -29,7 +29,6 @@ int main()
 		/**/ 
 		{ // put your code here instead that code
 			codeResponse=boardManger.manageMovment(res);
-			boardManger.removePieceIfEaten();
 			cout << "code response >> ";
 			//cin >> codeResponse;
 		}

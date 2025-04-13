@@ -16,7 +16,7 @@ bool Knight::m_register = PieceFactory::registerPiece('N',
 	{
 	}
 
-	bool Knight::canMoveTo(std::string destinyPos)
+	bool Knight::canDoStep(std::string destinyPos)
 	{
 		auto curXpos = getPosition()[1] - '0';
 		auto desXpos = destinyPos[1] - '0';
@@ -29,7 +29,7 @@ bool Knight::m_register = PieceFactory::registerPiece('N',
 		return (directionX == 2 && directionY == 1) || (directionX == 1 && directionY == 2);
 	}
 
-	bool Knight::ignorePath() const
+	bool Knight::ignorePath()
 	{
 		return true;
 	}

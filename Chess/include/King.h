@@ -5,8 +5,8 @@
 class King :public Piece {
 public:
 	King(std::string position, std::string teamColor);
-	bool canMoveTo(std::string destinyPos);
-	//bool isThreating(const Piece&);
+	bool canDoStep(std::string destinyPos);
+	bool ignorePath() override;
 private:
 	static bool m_register;
 };

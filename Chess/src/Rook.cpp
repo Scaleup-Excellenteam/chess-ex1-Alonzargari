@@ -17,7 +17,7 @@ Rook::Rook(std::string position,std::string teamColor):
 {
 }
 
-bool Rook::canMoveTo(std::string destinyPos)
+bool Rook::canDoStep(std::string destinyPos)
 {
 	auto curXpos = getPosition()[1];
 	auto curYpos = getPosition()[0];

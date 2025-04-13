@@ -9,23 +9,19 @@ BoardManager::BoardManager(const std::string& board):
 	m_whiteKing = nullptr;
 	initPieceVector(board);
 }
+//=========================================================
 
 int BoardManager::manageMovment(const std::string& input)
 {
 	int codeResponse = 0;
 	std::string pieceCurrentPosInput = { input[0],input[1] };
 	std::string  pieceDestinitionInput = { input[2],input[3] };
+
 	for (const auto& piece : m_pieces) {
 		if (piece->getPosition() == pieceDestinitionInput &&
 			piece->getTeamColor() == m_currentColorTurn)
 		{
 			return codeResponse = 13;
-		}
-		else if (piece->getPosition() == pieceCurrentPosInput&&!piece->ignorePath())
-		{
-			if (!pathIsClear(pieceCurrentPosInput, pieceDestinitionInput)) {
-				return codeResponse = 13;
-			}
 		}
 	}
 
@@ -33,7 +29,10 @@ int BoardManager::manageMovment(const std::string& input)
 		if (piece->getPosition() == pieceCurrentPosInput)
 		{
 			if (piece->getTeamColor() == m_currentColorTurn) {
-				if (piece->canMoveTo(pieceDestinitionInput)){
+				if (piece->canDoStep(pieceDestinitionInput)){
+					if (!pathIsClear(piece->getPosition(), pieceDestinitionInput)&&!piece->ignorePath()) {
+						return codeResponse = 13;
+					}
 					piece->setPosition(pieceDestinitionInput);
 					King* king = (m_currentColorTurn == "White") ? m_whiteKing : m_blackKing;
 					if (exposeToCheck(king)) {
@@ -42,11 +41,21 @@ int BoardManager::manageMovment(const std::string& input)
 					}
 					else {
 						King* king = (m_currentColorTurn == "White") ? m_blackKing : m_whiteKing;
-						if (king && pathIsClear(piece->getPosition(), king->getPosition())) {
+						if (king && pathIsClear(piece->getPosition(), king->getPosition())&& !piece->ignorePath()) {
+							piece->setLastPosition(pieceDestinitionInput);
+							removePieceIfEaten();
+							m_currentColorTurn = piece->getTeamColor() == "White" ? "Black" : "White";
+							return codeResponse = 41;
+						}
+						else if (king && piece->ignorePath() && piece->canDoStep(king->getPosition())) {
+							piece->setLastPosition(pieceDestinitionInput);
+							removePieceIfEaten();
+							m_currentColorTurn = piece->getTeamColor() == "White" ? "Black" : "White";
 							return codeResponse = 41;
 						}
 					}
 					piece->setLastPosition(pieceDestinitionInput);
+					removePieceIfEaten();
 					m_currentColorTurn = piece->getTeamColor()=="White" ? "Black": "White";
 					return codeResponse = 42;
 				}
@@ -57,7 +66,7 @@ int BoardManager::manageMovment(const std::string& input)
 	}
 	return codeResponse = 11;
 }
-
+//=========================================================
 void BoardManager::removePieceIfEaten()
 {
 	for (const auto& piece1 : m_pieces) {
@@ -72,6 +81,7 @@ void BoardManager::removePieceIfEaten()
 	m_pieces.erase(std::remove_if(m_pieces.begin(),m_pieces.end(), 
 		[](const auto& piece) { return piece->toErase();}),m_pieces.end());
 }
+//=========================================================
 
 void BoardManager::initPieceVector(const std::string& board)
 {
@@ -96,6 +106,7 @@ void BoardManager::initPieceVector(const std::string& board)
 		index++;
 	}
 }
+//=========================================================
 
 bool BoardManager::exposeToCheck(const King* king)
 {
@@ -105,7 +116,8 @@ bool BoardManager::exposeToCheck(const King* king)
 				continue;
 			}
 			else if (piece->getTeamColor() != m_currentColorTurn
-				&& pathIsClear(piece->getPosition(), king->getPosition()))
+				&&piece->canDoStep(king->getPosition()) && 
+				pathIsClear(piece->getPosition(), king->getPosition()))
 			{
 				return true;
 			}
@@ -113,6 +125,7 @@ bool BoardManager::exposeToCheck(const King* king)
 	}
 	return false;
 }
+//=========================================================
 
 bool BoardManager::pathIsClear(const std::string& curPos, const std::string& desPos) {
 
@@ -121,11 +134,11 @@ bool BoardManager::pathIsClear(const std::string& curPos, const std::string& des
 	char desPosX = desPos[1];
 	char desPosY = desPos[0];
 
-	int direcrtionY = (desPosY > curPosY) ? 1 : (desPosY <curPosY) ? -1 : 0;
-	int direcrtionX = (desPosX > curPosX) ? 1 : (desPosX < curPosX) ? -1 : 0;
+	int directionY = (desPosY > curPosY) ? 1 : (desPosY < curPosY) ? -1 : 0;
+	int directionX = (desPosX > curPosX) ? 1 : (desPosX < curPosX) ? -1 : 0;
 
-	int currentX = curPosX + direcrtionX;
-	int currentY = curPosY + direcrtionY;
+	int currentX = curPosX + directionX;
+	int currentY = curPosY + directionY;
 
 	while (currentX != desPosX || currentY != desPosY) {
 		std::string pos = { char(currentY),char(currentX) };
@@ -134,9 +147,8 @@ bool BoardManager::pathIsClear(const std::string& curPos, const std::string& des
 				return false;
 			}
 		}
-		currentX += direcrtionX;
-		currentY += direcrtionY;
+		currentX += directionX;
+		currentY += directionY;
 	}
 	return true;
 }
-
