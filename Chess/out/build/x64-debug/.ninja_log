@@ -1,5 +1,5 @@
 # ninja log v5
-27	566	7662877771989291	build.ninja	608a43865ca2bb92
+27	566	7663256369777334	build.ninja	608a43865ca2bb92
 19	2072	7662861834683478	CMakeFiles/Chess.dir/src/main.cpp.obj	84f25eb840257dbc
 37	1524	7662861829193987	CMakeFiles/Chess.dir/src/King.cpp.obj	3c352957edc90432
 27	1482	7659969285377397	CMakeFiles/Chess.dir/src/Chess.cpp.obj	5bd4cf0477557a2e
@@ -9,3 +9,5 @@
 30	1714	7662861831095854	CMakeFiles/Chess.dir/src/Rook.cpp.obj	8e08e4989869ac75
 34	1758	7662861831557748	CMakeFiles/Chess.dir/src/designPatterns/factory/PieceFactory.cpp.obj	e2534c7f5a4bcbe5
 23	831	7662862657333017	CMakeFiles/Chess.dir/src/Knight.cpp.obj	e2ed0ee70d28275f
+11	1246	7663257703413482	CMakeFiles/Chess.dir/src/BoardManager.cpp.obj	e7b3ac20d9107d35
+1246	1446	7663257705019697	Chess.exe	b632eff897980f77

@@ -41,13 +41,10 @@ int BoardManager::manageMovment(const std::string& input)
 					}
 					else {
 						King* king = (m_currentColorTurn == "White") ? m_blackKing : m_whiteKing;
-						if (king && pathIsClear(piece->getPosition(), king->getPosition())&& !piece->ignorePath()) {
-							piece->setLastPosition(pieceDestinitionInput);
-							removePieceIfEaten();
-							m_currentColorTurn = piece->getTeamColor() == "White" ? "Black" : "White";
-							return codeResponse = 41;
-						}
-						else if (king && piece->ignorePath() && piece->canDoStep(king->getPosition())) {
+						if (king && (
+							(!piece->ignorePath() && pathIsClear(piece->getPosition(), king->getPosition())) ||
+							(piece->ignorePath() && piece->canDoStep(king->getPosition())))) 
+						{
 							piece->setLastPosition(pieceDestinitionInput);
 							removePieceIfEaten();
 							m_currentColorTurn = piece->getTeamColor() == "White" ? "Black" : "White";
