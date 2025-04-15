@@ -1,4 +1,3 @@
-#pragma once
 #include "designPatterns/factory/PieceFactory.h"
 
 //=========================================================
