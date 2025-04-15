@@ -1,6 +1,10 @@
 #include "BoardManager.h"
 #include "designPatterns/factory/PieceFactory.h"
 
+//=========================================================
+/*
+* Board Manager contructor
+*/
 
 BoardManager::BoardManager(const std::string& board):
 	m_currentColorTurn{ "White" }
@@ -9,7 +13,14 @@ BoardManager::BoardManager(const std::string& board):
 	m_whiteKing = nullptr;
 	initPieceVector(board);
 }
+
 //=========================================================
+/*
+* This is the main function that manages piece movements
+* based on user input.
+* It verifies the move legality according to the game's rules and returns a response code
+* representing the outcome of the move.
+*/
 
 int BoardManager::manageMovment(const std::string& input)
 {
@@ -17,30 +28,44 @@ int BoardManager::manageMovment(const std::string& input)
 	std::string pieceCurrentPosInput = { input[0],input[1] };
 	std::string  pieceDestinitionInput = { input[2],input[3] };
 
+	//check if the destination is blocked by any of the player's pieces
 	for (const auto& piece : m_pieces) {
 		if (piece->getPosition() == pieceDestinitionInput &&
 			piece->getTeamColor() == m_currentColorTurn)
 		{
 			return codeResponse = 13;
 		}
+
 	}
 
 	for (const auto& piece : m_pieces) {
 		if (piece->getPosition() == pieceCurrentPosInput)
 		{
+			// Confirm that the selected piece belongs to the player whose turn it is
 			if (piece->getTeamColor() == m_currentColorTurn) {
+
 				if (piece->canDoStep(pieceDestinitionInput)){
-					if (!pathIsClear(piece->getPosition(), pieceDestinitionInput)&&!piece->ignorePath()) {
+
+					// If the path is not clear and the piece cannot ignore paths block the move
+					if (!pathIsClear(piece->getPosition(),pieceDestinitionInput)&&!piece->ignorePath()) {
 						return codeResponse = 13;
 					}
-					piece->setPosition(pieceDestinitionInput);
+
+					piece->setPosition(pieceDestinitionInput);// Temporarily move the piece to the new position 
+
+					// Get the current player's king
 					King* king = (m_currentColorTurn == "White") ? m_whiteKing : m_blackKing;
+
 					if (exposeToCheck(king)) {
 						piece->setPosition(piece->getLastPosition());
 						return codeResponse = 31;
 					}
+
 					else {
+
+						// Get the rival king to check if it's under threat
 						King* king = (m_currentColorTurn == "White") ? m_blackKing : m_whiteKing;
+
 						if (king && (
 							(!piece->ignorePath() && pathIsClear(piece->getPosition(), king->getPosition())) ||
 							(piece->ignorePath() && piece->canDoStep(king->getPosition())))) 
@@ -51,9 +76,10 @@ int BoardManager::manageMovment(const std::string& input)
 							return codeResponse = 41;
 						}
 					}
-					piece->setLastPosition(pieceDestinitionInput);
+
+					piece->setLastPosition(pieceDestinitionInput);// Update the last position after a valid move
 					removePieceIfEaten();
-					m_currentColorTurn = piece->getTeamColor()=="White" ? "Black": "White";
+					m_currentColorTurn = piece->getTeamColor()=="White" ? "Black": "White"; //switch turns
 					return codeResponse = 42;
 				}
 				return codeResponse = 21;
@@ -63,7 +89,13 @@ int BoardManager::manageMovment(const std::string& input)
 	}
 	return codeResponse = 11;
 }
+
 //=========================================================
+/*
+* This function removes a piece from the polymorphic vector
+* if it has been captured by an opponent's piece.
+*/
+
 void BoardManager::removePieceIfEaten()
 {
 	for (const auto& piece1 : m_pieces) {
@@ -78,7 +110,14 @@ void BoardManager::removePieceIfEaten()
 	m_pieces.erase(std::remove_if(m_pieces.begin(),m_pieces.end(), 
 		[](const auto& piece) { return piece->toErase();}),m_pieces.end());
 }
+
 //=========================================================
+/*
+* This function initializes the polymorphic vector of pieces.
+* It reads all the characters from the board and creates the 
+* corresponding pieces at their respective positions using the 
+* PieceFactory.
+*/
 
 void BoardManager::initPieceVector(const std::string& board)
 {
@@ -103,7 +142,13 @@ void BoardManager::initPieceVector(const std::string& board)
 		index++;
 	}
 }
+
 //=========================================================
+/*
+* This function checks whether the king is exposed to a check.
+* return true if there is a piece from the opposing team that 
+* can reach and threaten the king; false otherwise.
+*/
 
 bool BoardManager::exposeToCheck(const King* king)
 {
@@ -122,7 +167,12 @@ bool BoardManager::exposeToCheck(const King* king)
 	}
 	return false;
 }
+
 //=========================================================
+/*
+* this function checks if the path is clear and ther is no another
+* piece between the current piece position to the destination 
+*/
 
 bool BoardManager::pathIsClear(const std::string& curPos, const std::string& desPos) {
 

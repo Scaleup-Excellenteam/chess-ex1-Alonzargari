@@ -1,25 +1,43 @@
 #include "Queen.h"
 #include "designPatterns/factory/PieceFactory.h"
 
+
+//=========================================================
+/*
+* the registration of the piece to the factory map
+(mapping his representing char to the the function that
+return unique ptr of this piece)
+*/
+
 bool Queen::m_register = PieceFactory::registerPiece('Q', 
-	[](std::string position)->std::unique_ptr<Piece> 
+	[](const std::string& pos)->std::unique_ptr<Piece>
 	{
-		return std::make_unique<Queen>(position, "White");
+		return std::make_unique<Queen>(pos, "White");
 	})
 	&&
 	PieceFactory::registerPiece('q',
-	[](std::string position)->std::unique_ptr<Piece>
+	[](const std::string& pos)->std::unique_ptr<Piece>
 	{
-		return std::make_unique<Queen>(position, "Black");
+		return std::make_unique<Queen>(pos, "Black");
 	});
 
+//=========================================================
+/*
+* Queen contructor get the same parameters as Piece class
+*/
 
-Queen::Queen(std::string position, std::string teamColor) :
+Queen::Queen(const std::string& position, const std::string& teamColor) :
 	Piece(position, teamColor)
 {
 }
 
-bool Queen::canDoStep(std::string destination)
+//=========================================================
+/*
+* override implementation of the base class this function return
+* if the movment is legal or false if not
+*/
+
+bool Queen::canDoStep(const std::string& destination)
 {
 	int curPosX = getPosition()[1]-'1';
 	int curPosY = getPosition()[0]-'a';

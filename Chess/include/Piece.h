@@ -4,12 +4,13 @@
 
 class Piece {
 public:
-	Piece(std::string position,std::string teamColor);
-	virtual bool canDoStep (std::string destinyPos) = 0;
+	Piece(const std::string& position,const std::string& teamColor);
+	virtual ~Piece() = default;
+	virtual bool canDoStep (const std::string& destinyPos) = 0;
 	std::string getPosition() const;
 	std::string getLastPosition() const;
 	std::string getTeamColor() const;
-	void setLastPosition(std::string position);
+	void setLastPosition(const std::string& position);
 	void setPosition(const std::string&);
 	void setToErase();
 	bool toErase()const;

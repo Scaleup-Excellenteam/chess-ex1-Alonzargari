@@ -1,11 +1,23 @@
 #include "King.h"
 
-King::King(std::string position, std::string teamColor) :
+
+//=========================================================
+/*
+* King constructor get the same parameters as Piece class
+*/
+
+King::King(const std::string& position, const std::string& teamColor) :
 	Piece(position, teamColor)
 {
 }
 
-bool King::canDoStep(std::string destinyPos)
+//=========================================================
+/*
+* override implementation of the base class this function return
+* if the movment is legal or false if not
+*/
+
+bool King::canDoStep(const std::string& destinyPos)
 {
 	auto curXpos = getPosition()[1]-'0';
 	auto desXpos = destinyPos[1]-'0';
@@ -23,6 +35,11 @@ bool King::canDoStep(std::string destinyPos)
 	}
 	return false;
 }
+
+//=========================================================
+/*
+* king ignore the path he only care about the destination cell
+*/
 
 bool King::ignorePath()
 {

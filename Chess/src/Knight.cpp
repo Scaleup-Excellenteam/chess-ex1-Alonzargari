@@ -1,35 +1,59 @@
 #include "Knight.h"
 #include "designPatterns/factory/PieceFactory.h"
 
+
+//=========================================================
+/*
+* the registration of the piece to the factory map 
+(mapping his representing char to the the function that 
+return unique ptr of this piece)
+*/
+
 bool Knight::m_register = PieceFactory::registerPiece('N',
-	[](std::string pos)->std::unique_ptr<Piece> {
+	[](const std::string& pos)->std::unique_ptr<Piece> {
 		return std::make_unique<Knight>(pos, "White");
 	})
 	&&
 	PieceFactory::registerPiece('n',
-	[](std::string pos)->std::unique_ptr<Piece> {
+	[](const std::string& pos)->std::unique_ptr<Piece> {
 		return std::make_unique<Knight>(pos, "Black");
 	});
 
-	Knight::Knight(std::string position, std::string teamColor):
-		Piece(position,teamColor)
-	{
-	}
+//=========================================================
+/*
+* knigt contructor get the same parameters as Piece class
+*/
+Knight::Knight(const std::string& position, const std::string& teamColor):
+	Piece(position,teamColor)
+{
+}
 
-	bool Knight::canDoStep(std::string destinyPos)
-	{
-		auto curXpos = getPosition()[1] - '0';
-		auto desXpos = destinyPos[1] - '0';
-		auto curYpos = getPosition()[0] - 'a';
-		auto desYpos = destinyPos[0] - 'a';
+//=========================================================
+/*
+* override implementation of the base class this function return
+* if the movment is legal or false if not
+*/
 
-		int directionX = std::abs(desXpos - curXpos);
-		int directionY = std::abs(desYpos - curYpos);
+bool Knight::canDoStep(const std::string& destinyPos)
+{
+	auto curXpos = getPosition()[1] - '0';
+	auto desXpos = destinyPos[1] - '0';
+	auto curYpos = getPosition()[0] - 'a';
+	auto desYpos = destinyPos[0] - 'a';
 
-		return (directionX == 2 && directionY == 1) || (directionX == 1 && directionY == 2);
-	}
+	int directionX = std::abs(desXpos - curXpos);
+	int directionY = std::abs(desYpos - curYpos);
 
-	bool Knight::ignorePath()
-	{
-		return true;
-	}
+	return (directionX == 2 && directionY == 1) || (directionX == 1 && directionY == 2);
+}
+
+//=========================================================
+/*
+* Knight ignore the path he can step over other pieces he only
+* care the destination cell
+*/
+
+bool Knight::ignorePath()
+{
+	return true;
+}

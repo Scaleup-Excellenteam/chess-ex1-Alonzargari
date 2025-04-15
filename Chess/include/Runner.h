@@ -4,8 +4,8 @@
 
 class Runner :public Piece {
 public:
-	Runner(std::string position, std::string teamColor);
-	bool canDoStep(std::string destination);
+	Runner(const std::string& position, const std::string& teamColor);
+	bool canDoStep(const std::string& destination);
 private:
 	static bool m_register;
 };

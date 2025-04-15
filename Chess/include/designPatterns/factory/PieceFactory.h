@@ -9,8 +9,8 @@ using pieceMap = std::map<char, pieceFunc>;
 
 class PieceFactory {
 public:
-	static std::unique_ptr<Piece> createPiece(char pieceSymbole,std::string position);
-	static bool registerPiece(char, pieceFunc);
+	static std::unique_ptr<Piece> createPiece(const char pieceSymbole, const std::string& position);
+	static bool registerPiece(const char, pieceFunc);
 private:
 	static pieceMap& getPieceMap();
 };

@@ -1,23 +1,40 @@
 #include "Rook.h"
 #include "designPatterns/factory/PieceFactory.h"
 
+//=========================================================
+/*
+* the registration of the piece to the factory map
+(mapping his representing char to the the function that
+return unique ptr of this piece)
+*/
+
 bool Rook::m_register = PieceFactory::registerPiece('R',
-	[](std::string pos)->std::unique_ptr<Piece> {
+	[](const std::string& pos)->std::unique_ptr<Piece> {
 		return std::make_unique<Rook>(pos, "White");
 	})
 	&&
 	PieceFactory::registerPiece('r',
-	[](std::string pos)->std::unique_ptr<Piece> {
+	[](const std::string& pos)->std::unique_ptr<Piece> {
 		return std::make_unique<Rook>(pos, "Black");
 	});
 
+//=========================================================
+/*
+* Rook contructor get the same parameters as Piece class
+*/
 
-Rook::Rook(std::string position,std::string teamColor):
+Rook::Rook(const std::string& position, const std::string& teamColor):
 	Piece(position,teamColor)
 {
 }
 
-bool Rook::canDoStep(std::string destinyPos)
+//=========================================================
+/*
+* override implementation of the base class this function return
+* if the movment is legal or false if not
+*/
+
+bool Rook::canDoStep(const std::string& destinyPos)
 {
 	auto curXpos = getPosition()[1];
 	auto curYpos = getPosition()[0];

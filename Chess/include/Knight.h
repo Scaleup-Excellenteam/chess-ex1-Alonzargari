@@ -4,8 +4,8 @@
 
 class Knight:public Piece {
 public:
-	Knight(std::string position, std::string teamColor);
-	bool canDoStep(std::string destinyPos);
+	Knight(const std::string& position, const std::string& teamColor);
+	bool canDoStep(const std::string& destinyPos)override;
 	bool ignorePath() override;
 private:
 	static bool m_register;
