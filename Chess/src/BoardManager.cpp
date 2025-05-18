@@ -44,7 +44,9 @@ int BoardManager::manageMovment(const std::string& input)
 			// Confirm that the selected piece belongs to the player whose turn it is
 			if (piece->getTeamColor() == m_currentColorTurn) {
 
-				if (piece->canDoStep(pieceDestinitionInput)){
+				bool isEnemy = isEnemyAtPosition(pieceDestinitionInput, piece->getTeamColor());
+
+				if (piece->canDoStep(pieceDestinitionInput,isEnemy)){
 
 					// If the path is not clear and the piece cannot ignore paths block the move
 					if (!pathIsClear(piece->getPosition(),pieceDestinitionInput)&&!piece->ignorePath()) {
@@ -68,7 +70,7 @@ int BoardManager::manageMovment(const std::string& input)
 
 						if (king && (
 							(!piece->ignorePath() && pathIsClear(piece->getPosition(), king->getPosition())) ||
-							(piece->ignorePath() && piece->canDoStep(king->getPosition())))) 
+							(piece->ignorePath() && piece->canDoStep(king->getPosition(), isEnemy))))
 						{
 							piece->setLastPosition(pieceDestinitionInput);
 							removePieceIfEaten();
@@ -158,7 +160,7 @@ bool BoardManager::exposeToCheck(const King* king)
 				continue;
 			}
 			else if (piece->getTeamColor() != m_currentColorTurn
-				&&piece->canDoStep(king->getPosition()) && 
+				&&piece->canDoStep(king->getPosition(),true) && 
 				pathIsClear(piece->getPosition(), king->getPosition()))
 			{
 				return true;
@@ -198,4 +200,20 @@ bool BoardManager::pathIsClear(const std::string& curPos, const std::string& des
 		currentY += directionY;
 	}
 	return true;
+}
+//=========================================================
+Piece* BoardManager::getPieceAt(const std::string& pos)
+{
+	for (const auto& piece : m_pieces) {
+		if (piece->getPosition() == pos) {
+			return piece.get();
+		}
+	}
+	return nullptr;
+}
+//=========================================================
+bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& currentTeam)
+{
+	Piece* piece = getPieceAt(pos);
+	return piece != nullptr && piece->getTeamColor() != currentTeam;
 }

@@ -15,6 +15,8 @@ private:
 	void initPieceVector(const std::string& board);
 	bool exposeToCheck(const King* king);
 	bool pathIsClear(const std::string& , const std::string& );
+	Piece* getPieceAt(const std::string& pos);
+	bool isEnemyAtPosition(const std::string& pos, const std::string& currentTeam);
 	std::string m_currentColorTurn;
 	std::vector<std::unique_ptr<Piece>>m_pieces;
 	King* m_whiteKing;

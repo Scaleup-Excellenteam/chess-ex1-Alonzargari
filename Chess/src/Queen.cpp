@@ -37,12 +37,12 @@ Queen::Queen(const std::string& position, const std::string& teamColor) :
 * if the movment is legal or false if not
 */
 
-bool Queen::canDoStep(const std::string& destination)
+bool Queen::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 {
 	int curPosX = getPosition()[1]-'1';
 	int curPosY = getPosition()[0]-'a';
-	int desPosX = destination[1]-'1';
-	int desPosY = destination[0]-'a';
+	int desPosX = destinyPos[1]-'1';
+	int desPosY = destinyPos[0]-'a';
 
 	return (abs(desPosX - curPosX) == abs(desPosY - curPosY))||(desPosX-curPosX)==0||(desPosY-curPosY)==0;
 	

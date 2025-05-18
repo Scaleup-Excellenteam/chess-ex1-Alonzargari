@@ -34,7 +34,7 @@ Knight::Knight(const std::string& position, const std::string& teamColor):
 * if the movment is legal or false if not
 */
 
-bool Knight::canDoStep(const std::string& destinyPos)
+bool Knight::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 {
 	auto curXpos = getPosition()[1] - '0';
 	auto desXpos = destinyPos[1] - '0';

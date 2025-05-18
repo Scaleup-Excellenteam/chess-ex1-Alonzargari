@@ -6,7 +6,7 @@ class Piece {
 public:
 	Piece(const std::string& position,const std::string& teamColor);
 	virtual ~Piece() = default;
-	virtual bool canDoStep (const std::string& destinyPos) = 0;
+	virtual bool canDoStep(const std::string& destinyPos, bool isEnemyThere) = 0;
 	std::string getPosition() const;
 	std::string getLastPosition() const;
 	std::string getTeamColor() const;

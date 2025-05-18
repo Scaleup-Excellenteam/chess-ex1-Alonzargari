@@ -34,7 +34,7 @@ Rook::Rook(const std::string& position, const std::string& teamColor):
 * if the movment is legal or false if not
 */
 
-bool Rook::canDoStep(const std::string& destinyPos)
+bool Rook::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 {
 	auto curXpos = getPosition()[1];
 	auto curYpos = getPosition()[0];
