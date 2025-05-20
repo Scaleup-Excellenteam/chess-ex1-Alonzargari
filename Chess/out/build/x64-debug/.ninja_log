@@ -11,4 +11,9 @@
 1660	3121	7692746692062773	CMakeFiles/Chess.dir/src/Pawn.cpp.obj	e3468a6ee4b9099c
 34	2435	7692746685189179	CMakeFiles/Chess.dir/src/BoardManager.cpp.obj	e7b3ac20d9107d35
 3121	3323	7692746693695972	Chess.exe	b8fb194cb6ce7414
-30	274	7694416641003660	build.ninja	608a43865ca2bb92
+30	274	7694562219272522	build.ninja	608a43865ca2bb92
+19	1719	7694660593327997	CMakeFiles/Chess.dir/src/BoardManager.cpp.obj	e7b3ac20d9107d35
+15	1928	7694660595401495	CMakeFiles/Chess.dir/src/main.cpp.obj	84f25eb840257dbc
+3	1685	7694703937167512	CMakeFiles/Chess.dir/src/BoardManager.cpp.obj	e7b3ac20d9107d35
+25	1210	7694708423952631	CMakeFiles/Chess.dir/src/BoardManager.cpp.obj	e7b3ac20d9107d35
+21	1474	7694708426602097	CMakeFiles/Chess.dir/src/main.cpp.obj	84f25eb840257dbc

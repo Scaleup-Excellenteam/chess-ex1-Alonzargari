@@ -11,12 +11,14 @@ public:
 	BoardManager(const std::string& board);
 	int manageMovment(const std::string& input);
 	void removePieceIfEaten();
+	bool pathIsClear(const std::string&, const std::string&);
+	bool isEnemyAtPosition(const std::string& pos, const std::string& currentTeam);
+	std::vector<std::unique_ptr<Piece>>& getAllPieces();
+	std::string getCurrentTurnColor()const;
 private:
 	void initPieceVector(const std::string& board);
 	bool exposeToCheck(const King* king);
-	bool pathIsClear(const std::string& , const std::string& );
 	Piece* getPieceAt(const std::string& pos);
-	bool isEnemyAtPosition(const std::string& pos, const std::string& currentTeam);
 	std::string m_currentColorTurn;
 	std::vector<std::unique_ptr<Piece>>m_pieces;
 	King* m_whiteKing;

@@ -44,6 +44,7 @@ int BoardManager::manageMovment(const std::string& input)
 			// Confirm that the selected piece belongs to the player whose turn it is
 			if (piece->getTeamColor() == m_currentColorTurn) {
 
+				// here its working only for the pawn if the user want to eat enemy in diagnole
 				bool isEnemy = isEnemyAtPosition(pieceDestinitionInput, piece->getTeamColor());
 
 				if (piece->canDoStep(pieceDestinitionInput,isEnemy)){
@@ -214,6 +215,17 @@ Piece* BoardManager::getPieceAt(const std::string& pos)
 //=========================================================
 bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& currentTeam)
 {
-	Piece* piece = getPieceAt(pos);
+	auto piece = getPieceAt(pos);
 	return piece != nullptr && piece->getTeamColor() != currentTeam;
+}
+
+//========================================================
+std::vector<std::unique_ptr<Piece>>& BoardManager::getAllPieces()
+{
+	return m_pieces;
+}
+
+std::string BoardManager::getCurrentTurnColor() const
+{
+	return m_currentColorTurn;
 }
