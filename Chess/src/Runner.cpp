@@ -10,12 +10,12 @@ return unique ptr of this piece)
 
 bool Runner::m_register=PieceFactory::registerPiece('B',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-	return std::make_unique<Runner>(pos, "White");
+	return std::make_unique<Runner>(pos, "White",3);
 	})
 	&&
 	PieceFactory::registerPiece('b',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-		return std::make_unique<Runner>(pos, "Black");
+		return std::make_unique<Runner>(pos, "Black",3);
 	});
 
 //=========================================================
@@ -23,8 +23,8 @@ bool Runner::m_register=PieceFactory::registerPiece('B',
 * Runner contructor get the same parameters as Piece class
 */
 
-Runner::Runner(const std::string& position, const std::string& teamColor):
-Piece(position,teamColor)
+Runner::Runner(const std::string& position, const std::string& teamColor,int rank):
+Piece(position,teamColor, rank)
 {
 }
 

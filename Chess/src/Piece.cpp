@@ -5,8 +5,8 @@
 * Every piece recived current position on the board and its team color
 */
 
-Piece::Piece(const std::string& position, const std::string& teamColor):
-	m_currentPosition{position},m_lastPosition{position},m_teamColor{teamColor},m_toErase{false}
+Piece::Piece(const std::string& position, const std::string& teamColor,int rank):
+	m_currentPosition{position},m_lastPosition{position},m_teamColor{teamColor},m_toErase{false},m_rank{rank}
 {
 }
 
@@ -14,6 +14,11 @@ Piece::Piece(const std::string& position, const std::string& teamColor):
 /*
 * this function return the current position on the board
 */
+
+int Piece::getPieceRank()
+{
+	return m_rank;
+}
 
 std::string Piece::getPosition() const
 {

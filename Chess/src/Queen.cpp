@@ -12,13 +12,13 @@ return unique ptr of this piece)
 bool Queen::m_register = PieceFactory::registerPiece('Q', 
 	[](const std::string& pos)->std::unique_ptr<Piece>
 	{
-		return std::make_unique<Queen>(pos, "White");
+		return std::make_unique<Queen>(pos, "White",9);
 	})
 	&&
 	PieceFactory::registerPiece('q',
 	[](const std::string& pos)->std::unique_ptr<Piece>
 	{
-		return std::make_unique<Queen>(pos, "Black");
+		return std::make_unique<Queen>(pos, "Black",9);
 	});
 
 //=========================================================
@@ -26,8 +26,8 @@ bool Queen::m_register = PieceFactory::registerPiece('Q',
 * Queen contructor get the same parameters as Piece class
 */
 
-Queen::Queen(const std::string& position, const std::string& teamColor) :
-	Piece(position, teamColor)
+Queen::Queen(const std::string& position, const std::string& teamColor, int rank) :
+	Piece(position, teamColor,rank)
 {
 }
 
@@ -47,3 +47,4 @@ bool Queen::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 	return (abs(desPosX - curPosX) == abs(desPosY - curPosY))||(desPosX-curPosX)==0||(desPosY-curPosY)==0;
 	
 }
+

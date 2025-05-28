@@ -10,12 +10,12 @@ return unique ptr of this piece)
 
 bool Rook::m_register = PieceFactory::registerPiece('R',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-		return std::make_unique<Rook>(pos, "White");
+		return std::make_unique<Rook>(pos, "White",5);
 	})
 	&&
 	PieceFactory::registerPiece('r',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-		return std::make_unique<Rook>(pos, "Black");
+		return std::make_unique<Rook>(pos, "Black",5);
 	});
 
 //=========================================================
@@ -23,8 +23,8 @@ bool Rook::m_register = PieceFactory::registerPiece('R',
 * Rook contructor get the same parameters as Piece class
 */
 
-Rook::Rook(const std::string& position, const std::string& teamColor):
-	Piece(position,teamColor)
+Rook::Rook(const std::string& position, const std::string& teamColor,int rank):
+	Piece(position,teamColor,rank)
 {
 }
 

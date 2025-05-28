@@ -6,8 +6,8 @@
 * King constructor get the same parameters as Piece class
 */
 
-King::King(const std::string& position, const std::string& teamColor) :
-	Piece(position, teamColor)
+King::King(const std::string& position, const std::string& teamColor, int rank) :
+	Piece(position,teamColor,rank)
 {
 }
 
@@ -35,7 +35,6 @@ bool King::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 	}
 	return false;
 }
-
 //=========================================================
 /*
 * king ignore the path he only care about the destination cell

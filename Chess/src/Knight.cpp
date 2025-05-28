@@ -11,20 +11,20 @@ return unique ptr of this piece)
 
 bool Knight::m_register = PieceFactory::registerPiece('N',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-		return std::make_unique<Knight>(pos, "White");
+		return std::make_unique<Knight>(pos, "White",3);
 	})
 	&&
 	PieceFactory::registerPiece('n',
 	[](const std::string& pos)->std::unique_ptr<Piece> {
-		return std::make_unique<Knight>(pos, "Black");
+		return std::make_unique<Knight>(pos, "Black",3);
 	});
 
 //=========================================================
 /*
 * knigt contructor get the same parameters as Piece class
 */
-Knight::Knight(const std::string& position, const std::string& teamColor):
-	Piece(position,teamColor)
+Knight::Knight(const std::string& position, const std::string& teamColor, int rank):
+	Piece(position,teamColor,rank)
 {
 }
 
