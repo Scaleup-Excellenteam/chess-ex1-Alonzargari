@@ -6,8 +6,16 @@ BestMovesCalculator::BestMovesCalculator(const std::vector<Piece*>& pieces)
 {
 }
 //=========================================================
+/**
+ * Calculates the best moves for the current player and stores them in a priority queue.
+ *
+ * This function iterates over all the pieces of the current player and evaluates the best move
+ * for each. It uses a recursive minimax-like evaluation to simulate possible future turns up to
+ * a specified max depth. After evaluating, it adds the total score of each move (current move score
+ * + expected outcome from deeper levels) into a priority queue of best moves.
+ */
 
-void BestMovesCalculator::calculateBestMoves(int depth,const std::string& currentColor,const BoardContext& boardCtx)
+void BestMovesCalculator::calculateBestMoves(int maxDepth,const std::string& currentColor,const BoardContext& boardCtx)
 {
     auto myPieces = getPiecesOfColor(currentColor);
 
@@ -19,9 +27,9 @@ void BestMovesCalculator::calculateBestMoves(int depth,const std::string& curren
 
         std::string opponentColor = (currentColor == "White") ? "Black" : "White";
 
-        int bestScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
+        int calculatedDepthesScore = evaluateBestMoveRecursive(boardCtx,1,maxDepth, opponentColor,false);
 
-        int totalMoveScore = move->getScore() - bestScore;
+        int totalMoveScore = move->getScore() + calculatedDepthesScore;
         move->setScore(totalMoveScore);
 
         if (m_priorityQueue.size() < 5) {
@@ -36,18 +44,24 @@ void BestMovesCalculator::calculateBestMoves(int depth,const std::string& curren
 }
 
 //=========================================================
-int BestMovesCalculator::evaluateBestMoveRecursive(
-    const BoardContext& boardCtx,
-    int depth,
-    const std::string& currentColor)
+/**
+ * Recursively evaluates future moves and returns the best cumulative score from this point.
+ * This function simulates moves recursively by alternating turns between the player and opponent.
+ * Each level of depth simulates one move (either yours or the opponent's). The function adds or
+ * subtracts move scores based on whether it's your turn or the opponent's turn:
+ * - If it's your turn (`isMyTurn == true`): Add the move score to the recursive result.
+ * - If it's the opponent's turn: Subtract your move score from the recursive result.
+ * This approach estimates the net impact of a move considering opponent responses up to maxDepth.
+ */
+int BestMovesCalculator::evaluateBestMoveRecursive(const BoardContext& boardCtx,int depth,int maxDepth,const std::string& currentColor, bool isMyTurn)
 {
-    if (depth == 0) {
+    if (depth == maxDepth) {
         int curHighestScore = 0;
         auto myPieces = getPiecesOfColor(currentColor);
         for (auto piece : myPieces) {
             Move* move = evaluateMove(piece, boardCtx);
             if (move) {
-                curHighestScore = std::max(curHighestScore, move->getScore());
+                curHighestScore = move->getScore();
                 delete move;
             }
         }
@@ -65,10 +79,12 @@ int BestMovesCalculator::evaluateBestMoveRecursive(
         std::string originalPos = piece->getPosition();
         piece->setPosition(move->getDesPosition());
         std::string opponentColor = (currentColor == "White") ? "Black" : "White";
-        int curDepthhScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
+        isMyTurn = !isMyTurn;
+        int curDepthScore = evaluateBestMoveRecursive(boardCtx, depth + 1,maxDepth, opponentColor,isMyTurn);
 
-        int netoScore = depth%2==0? move->getScore() - curDepthhScore : move->getScore() + curDepthhScore;
-        bestScore = std::max(bestScore, netoScore);
+        int netScore = isMyTurn? move->getScore() + curDepthScore : curDepthScore - move->getScore();
+
+        bestScore = std::max(bestScore, curDepthScore);
         piece->setPosition(originalPos);
         delete move;
     }

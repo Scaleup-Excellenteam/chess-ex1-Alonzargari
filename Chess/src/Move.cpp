@@ -10,9 +10,9 @@ void Move::setDesPosition(const std::string& to)
 	m_to = to;
 }
 
-void Move::addScore(const int newScore)
+void Move::setScore(const int newScore)
 {
-	m_score += newScore;
+	m_score = newScore;
 }
 
 std::string Move::getDesPosition() const

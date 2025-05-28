@@ -16,8 +16,8 @@ public:
         std::function<bool(const std::string&, const std::string&)>PathIsClearFunc;
     };
     BestMovesCalculator(const std::vector<Piece*>& pieces);
-    void calculateBestMoves(int depth,const std::string& currentColorTurn,const BoardContext& boardCtx);
-    int evaluateBestMoveRecursive(const BoardContext& boardCtx, int depth, const std::string& currentColor);
+    void calculateBestMoves(int maxDepth,const std::string& currentColorTurn,const BoardContext& boardCtx);
+    int evaluateBestMoveRecursive(const BoardContext& boardCtx, int depth, int maxDepth, const std::string& currentColor, bool isMyTurn);
     Move* evaluateMove(Piece* piece,const BoardContext& boardCtx);
     std::vector<Piece*> getPiecesOfColor(const std::string& color);
     void restoreBoard();
