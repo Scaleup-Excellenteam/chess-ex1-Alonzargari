@@ -5,6 +5,7 @@ BestMovesCalculator::BestMovesCalculator(const std::vector<Piece*>& pieces)
     : m_pieces(pieces)
 {
 }
+//=========================================================
 
 void BestMovesCalculator::calculateBestMoves(int depth,const std::string& currentColor,const BoardContext& boardCtx)
 {
@@ -18,10 +19,10 @@ void BestMovesCalculator::calculateBestMoves(int depth,const std::string& curren
 
         std::string opponentColor = (currentColor == "White") ? "Black" : "White";
 
-        int opponentScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
+        int bestScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
 
-        int netScore = move->getScore() - opponentScore;
-        move->addScore(netScore); 
+        int totalMoveScore = move->getScore() - bestScore;
+        move->setScore(totalMoveScore);
 
         if (m_priorityQueue.size() < 5) {
             m_priorityQueue.push(move);
@@ -29,27 +30,28 @@ void BestMovesCalculator::calculateBestMoves(int depth,const std::string& curren
         else {
             m_priorityQueue.poll();
         }
-
+        restoreBoard();
     }
 
 }
 
+//=========================================================
 int BestMovesCalculator::evaluateBestMoveRecursive(
     const BoardContext& boardCtx,
     int depth,
     const std::string& currentColor)
 {
     if (depth == 0) {
-        int totalScore = 0;
+        int curHighestScore = 0;
         auto myPieces = getPiecesOfColor(currentColor);
         for (auto piece : myPieces) {
             Move* move = evaluateMove(piece, boardCtx);
             if (move) {
-                totalScore += move->getScore();
+                curHighestScore = std::max(curHighestScore, move->getScore());
                 delete move;
             }
         }
-        return totalScore;
+        return curHighestScore;
     }
 
     int bestScore = 0;
@@ -60,18 +62,20 @@ int BestMovesCalculator::evaluateBestMoveRecursive(
 
         if (piece->toErase()||!move) continue;
         
+        std::string originalPos = piece->getPosition();
         piece->setPosition(move->getDesPosition());
         std::string opponentColor = (currentColor == "White") ? "Black" : "White";
-        int opponentScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
+        int curDepthhScore = evaluateBestMoveRecursive(boardCtx, depth - 1, opponentColor);
 
-        int netoScore = move->getScore() - opponentScore;
+        int netoScore = depth%2==0? move->getScore() - curDepthhScore : move->getScore() + curDepthhScore;
         bestScore = std::max(bestScore, netoScore);
+        piece->setPosition(originalPos);
         delete move;
     }
 
     return bestScore;
 }
-
+//=========================================================
 std::vector<Piece*> BestMovesCalculator::getPiecesOfColor(const std::string& color)
 {
     std::vector<Piece*> piecesOfColor;
@@ -82,6 +86,7 @@ std::vector<Piece*> BestMovesCalculator::getPiecesOfColor(const std::string& col
     }
     return piecesOfColor;
 }
+//=========================================================
 
 void BestMovesCalculator::restoreBoard()
 {
@@ -90,6 +95,7 @@ void BestMovesCalculator::restoreBoard()
         piece->setToErase(false);
     }
 }
+//=========================================================
 
 Move* BestMovesCalculator::evaluateMove(Piece* piece,const BoardContext& boardCtx) {
     int bestScore = 0;
@@ -114,7 +120,7 @@ Move* BestMovesCalculator::evaluateMove(Piece* piece,const BoardContext& boardCt
                     for (const auto& enemy : enemyPieces) {
                         if (enemy->canDoStep(desPos, true)) {
                             if (enemy->ignorePath() || boardCtx.PathIsClearFunc(enemy->getPosition(), desPos)) {
-                                score -= enemy->getPieceRank();
+                                score>0 ? score -= enemy->getPieceRank():score;
                             }
                         }
                     }
