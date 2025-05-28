@@ -69,9 +69,9 @@ void Piece::setPosition(const std::string& position)
 that this object need to erased from the vector
 */
 
-void Piece::setToErase()
+void Piece::setToErase(bool erase)
 {
-	m_toErase = true;
+	m_toErase = erase;
 }
 
 //=========================================================

@@ -13,7 +13,7 @@ public:
 	std::string getTeamColor() const;
 	void setLastPosition(const std::string& position);
 	void setPosition(const std::string&);
-	void setToErase();
+	void setToErase(bool erase);
 	bool toErase()const;
 	virtual bool ignorePath() ;
 private:

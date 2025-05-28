@@ -106,7 +106,7 @@ void BoardManager::removePieceIfEaten()
 			if(piece1->getPosition()==piece2->getPosition() && 
 				piece1->getTeamColor() != piece2->getTeamColor())
 			{
-				piece1->getTeamColor() == m_currentColorTurn ? piece2->setToErase() : piece1->setToErase();
+				piece1->getTeamColor() == m_currentColorTurn ? piece2->setToErase(true) : piece1->setToErase(true);
 			}
 		}
 	}
