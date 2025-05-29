@@ -5,6 +5,8 @@
 #include <vector>
 #include "Piece.h"
 #include "King.h"
+#include "BestMovesCalculator.h"
+#include "PriorityQueue.h"
 
 class BoardManager {
 public:
@@ -13,8 +15,12 @@ public:
 	void removePieceIfEaten();
 	bool pathIsClear(const std::string&, const std::string&);
 	bool isEnemyAtPosition(const std::string& pos, const std::string& currentTeam);
+	void printBestMovesOfDepth(int depth);
+	bool blockedByOwnPlayer(const std::string& pieceDestinitionInput);
+
 
 private:
+	void calculateBestMoves(int depth);
 	void initPieceVector(const std::string& board);
 	bool exposeToCheck(const King* king);
 	Piece* getPieceAt(const std::string& pos);
@@ -22,5 +28,6 @@ private:
 	std::vector<std::unique_ptr<Piece>>m_pieces;
 	King* m_whiteKing;
 	King* m_blackKing;
+	std::unique_ptr<BestMovesCalculator> m_bmc;
 };
 

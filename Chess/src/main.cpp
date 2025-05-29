@@ -8,8 +8,11 @@ int main()
 //	string board = "##########N######QK#############B#########R######n##b###r#r#k#q#";
 	Chess a(board);
 	int codeResponse = 0;
-	string res = a.getInput();
 	auto boardManger = BoardManager(board);
+	
+	string res = a.getInput([&](int depth) {return boardManger.printBestMovesOfDepth(depth);});
+	
+
 	while (res != "exit")
 	{
 		/* 
@@ -35,7 +38,7 @@ int main()
 		/**/
 
 		a.setCodeResponse(codeResponse);
-		res = a.getInput(); 
+		res = a.getInput([&](int depth) {return boardManger.printBestMovesOfDepth(depth);});
 	}
 
 	cout << endl << "Exiting " << endl; 

@@ -40,7 +40,7 @@ bool King::canDoStep(const std::string& destinyPos, bool isEnemyThere)
 * king ignore the path he only care about the destination cell
 */
 
-bool King::ignorePath()
-{
-	return true;
-}
+//bool King::ignorePath()
+//{
+//	return true;
+//}

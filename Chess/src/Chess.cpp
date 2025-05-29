@@ -281,7 +281,7 @@ Chess::Chess(const string& start)
 }
 
 // get the source and destination 
-string Chess::getInput()
+string Chess::getInput(std::function<void(int depth)> printBoardFunc)
 {
 	static bool isFirst = true;
 
@@ -291,6 +291,7 @@ string Chess::getInput()
 		doTurn(); 
 
 	displayBoard();
+	printBoardFunc(2);
 	showAskInput();
 
 	cin >> m_input;

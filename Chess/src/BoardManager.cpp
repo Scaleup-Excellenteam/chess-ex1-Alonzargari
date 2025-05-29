@@ -12,6 +12,7 @@ BoardManager::BoardManager(const std::string& board):
 	m_blackKing = nullptr;
 	m_whiteKing = nullptr;
 	initPieceVector(board);
+	m_bmc = std::make_unique<BestMovesCalculator>();
 }
 
 //=========================================================
@@ -29,13 +30,10 @@ int BoardManager::manageMovment(const std::string& input)
 	std::string  pieceDestinitionInput = { input[2],input[3] };
 
 	//check if the destination is blocked by any of the player's pieces
-	for (const auto& piece : m_pieces) {
-		if (piece->getPosition() == pieceDestinitionInput &&
-			piece->getTeamColor() == m_currentColorTurn)
-		{
-			return codeResponse = 13;
-		}
-
+	
+	if (blockedByOwnPlayer(pieceDestinitionInput))
+	{
+		return codeResponse = 13;
 	}
 
 	for (const auto& piece : m_pieces) {
@@ -140,13 +138,14 @@ void BoardManager::initPieceVector(const std::string& board)
 			auto king = std::make_unique<King>(curPos, "Black", 20);
 			m_blackKing = king.get();
 			m_pieces.emplace_back(std::move(king));
-			if ((index + 1) % 8 == 0) {
-				row++;
-			}
-			index++;
 		}
+		if ((index + 1) % 8 == 0) {
+			row++;
+		}
+		index++;
 	}
 }
+
 
 //=========================================================
 /*
@@ -222,3 +221,33 @@ bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& 
 }
 
 //========================================================
+bool BoardManager::blockedByOwnPlayer(const std::string& pieceDestinitionInput)
+{
+	for (const auto& piece : m_pieces) {
+		if (piece->getPosition() == pieceDestinitionInput &&
+			piece->getTeamColor() == m_currentColorTurn)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+//========================================================
+void BoardManager::calculateBestMoves(int depth)
+{
+	m_bmc->setPieces(m_pieces);
+	BestMovesCalculator::BoardContext boardCtx = {
+		[this](const std::string& pos, const std::string& currentTeam) {return this->isEnemyAtPosition(pos,currentTeam);},
+		[this](const std::string& from, const std::string& to) {return this->pathIsClear(from,to);},
+		[this](const std::string& pieceDesPos) {return this->blockedByOwnPlayer(pieceDesPos);}
+
+	};
+	m_bmc->calculateBestMoves(depth,m_currentColorTurn , boardCtx);
+}
+//========================================================
+void BoardManager::printBestMovesOfDepth(int depth)
+{
+	calculateBestMoves(depth);
+	m_bmc->printPriorityQueue();
+}
