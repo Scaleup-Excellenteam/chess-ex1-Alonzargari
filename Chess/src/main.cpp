@@ -9,8 +9,11 @@ int main()
 	Chess a(board);
 	int codeResponse = 0;
 	auto boardManger = BoardManager(board);
-	
-	string res = a.getInput([&](int depth) {return boardManger.printBestMovesOfDepth(depth);});
+	int depth;
+	std::cout << "enter depth to calculate best moves in this depth" << std::endl;
+	cin >> depth;
+	boardManger.calculateBestMoves(depth);
+	string res = a.getInput([&]() {return boardManger.printBestMovesOfDepth();});
 	
 
 	while (res != "exit")
@@ -32,13 +35,13 @@ int main()
 		/**/ 
 		{ // put your code here instead that code
 			codeResponse=boardManger.manageMovment(res);
-			cout << "code response >> ";
+			boardManger.calculateBestMoves(depth);
 			//cin >> codeResponse;
 		}
 		/**/
-
+		
 		a.setCodeResponse(codeResponse);
-		res = a.getInput([&](int depth) {return boardManger.printBestMovesOfDepth(depth);});
+		res = a.getInput([&]() {return boardManger.printBestMovesOfDepth();});
 	}
 
 	cout << endl << "Exiting " << endl; 

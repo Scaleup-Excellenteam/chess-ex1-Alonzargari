@@ -39,6 +39,6 @@ public:
 	Chess(const string& start = "RNBQKBNRPPPPPPPP################################pppppppprnbqkbnr");
 	Chess(const Chess&)=delete;
 	Chess& operator=(const Chess&) = delete;
-	string getInput(std::function<void(int)> printBoardFunc);
+	string getInput(std::function<void()> printBoardFunc);
 	void setCodeResponse(int codeResponse);
 };

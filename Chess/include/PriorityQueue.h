@@ -5,8 +5,8 @@
 
 template<typename T>
 struct MyComparator {
-    bool operator()(const T* a, const T* b) const {
-        return a < b;
+    bool operator()(const std::unique_ptr<T>& a, const std::unique_ptr<T>& b) const {
+        return *a < *b;
     }
 };
 
@@ -16,10 +16,10 @@ class PriorityQueue {
 public:
     void push(T value) {
         auto it = m_data.begin();
-        while (it != m_data.end() && comp(*it, value)) {
+        while (it != m_data.end() && comp(*it, value)) { 
             ++it;
         }
-        m_data.insert(it, value);
+        m_data.insert(it, std::move(value)); 
     }
 
     void poll() {
@@ -40,8 +40,14 @@ private:
 
 template<typename T, typename Comparator>
 std::ostream& operator<<(std::ostream& os, const PriorityQueue<T, Comparator>& pq) {
-    std::for_each(pq.begin(), pq.end(), [&os](const T& item) {
-        os << *item << "\n";
-        });
+    int count = 0;
+    auto it = pq.end();
+
+    while (it != pq.begin() && count < 3) {
+        --it;
+        os << **it << "\n";
+        ++count;
+    }
+
     return os;
 }

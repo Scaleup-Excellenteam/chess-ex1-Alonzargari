@@ -281,7 +281,7 @@ Chess::Chess(const string& start)
 }
 
 // get the source and destination 
-string Chess::getInput(std::function<void(int depth)> printBoardFunc)
+string Chess::getInput(std::function<void()> printBoardFunc)
 {
 	static bool isFirst = true;
 
@@ -290,8 +290,9 @@ string Chess::getInput(std::function<void(int depth)> printBoardFunc)
 	else
 		doTurn(); 
 
+
 	displayBoard();
-	printBoardFunc(2);
+	printBoardFunc();
 	showAskInput();
 
 	cin >> m_input;
@@ -304,6 +305,7 @@ string Chess::getInput(std::function<void(int depth)> printBoardFunc)
 		else
 			m_errorMsg = "The source and the destination are the same !! \n";
 		displayBoard();
+		printBoardFunc();
 		showAskInput();
 		cin >> m_input;
 		if (isExit())

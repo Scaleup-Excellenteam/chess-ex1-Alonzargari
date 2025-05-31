@@ -6,7 +6,7 @@ class Move {
    
 public:
     struct MoveComparator {
-        bool operator()(const Move* a, const Move* b) const {
+        bool operator()(const std::unique_ptr<Move>& a, const std::unique_ptr<Move>& b) const {
             return a->getScore() < b->getScore();
         }
     };

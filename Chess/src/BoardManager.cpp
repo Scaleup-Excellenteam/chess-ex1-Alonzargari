@@ -130,12 +130,12 @@ void BoardManager::initPieceVector(const std::string& board)
 			m_pieces.emplace_back(std::move(piece));
 		}
 		if (board[index] == 'K') {
-			auto king = std::make_unique<King>(curPos, "White", 20);
+			auto king = std::make_unique<King>(curPos, "White", 100);
 			m_whiteKing = king.get();
 			m_pieces.emplace_back(std::move(king));
 		}
 		if (board[index] == 'k') {
-			auto king = std::make_unique<King>(curPos, "Black", 20);
+			auto king = std::make_unique<King>(curPos, "Black", 100);
 			m_blackKing = king.get();
 			m_pieces.emplace_back(std::move(king));
 		}
@@ -223,14 +223,8 @@ bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& 
 //========================================================
 bool BoardManager::blockedByOwnPlayer(const std::string& pieceDestinitionInput)
 {
-	for (const auto& piece : m_pieces) {
-		if (piece->getPosition() == pieceDestinitionInput &&
-			piece->getTeamColor() == m_currentColorTurn)
-		{
-			return true;
-		}
-	}
-	return false;
+	auto piece = getPieceAt(pieceDestinitionInput);
+	return piece != nullptr && piece->getTeamColor() == m_currentColorTurn;
 }
 
 //========================================================
@@ -238,16 +232,22 @@ void BoardManager::calculateBestMoves(int depth)
 {
 	m_bmc->setPieces(m_pieces);
 	BestMovesCalculator::BoardContext boardCtx = {
-		[this](const std::string& pos, const std::string& currentTeam) {return this->isEnemyAtPosition(pos,currentTeam);},
 		[this](const std::string& from, const std::string& to) {return this->pathIsClear(from,to);},
 		[this](const std::string& pieceDesPos) {return this->blockedByOwnPlayer(pieceDesPos);}
 
 	};
-	m_bmc->calculateBestMoves(depth,m_currentColorTurn , boardCtx);
+	m_bmc->calculateBestMoves(depth,m_currentColorTurn , boardCtx,true);
 }
 //========================================================
-void BoardManager::printBestMovesOfDepth(int depth)
+void BoardManager::printBestMovesOfDepth()
 {
-	calculateBestMoves(depth);
-	m_bmc->printPriorityQueue();
+	try
+	{
+		m_bmc->printPriorityQueue();
+	}
+	catch (const std::exception& e)
+	{
+		std::cout<<e.what()<<std::endl;
+	}
+	
 }

@@ -15,12 +15,13 @@ public:
 	void removePieceIfEaten();
 	bool pathIsClear(const std::string&, const std::string&);
 	bool isEnemyAtPosition(const std::string& pos, const std::string& currentTeam);
-	void printBestMovesOfDepth(int depth);
+	void printBestMovesOfDepth();
 	bool blockedByOwnPlayer(const std::string& pieceDestinitionInput);
+	void calculateBestMoves(int depth);
+
 
 
 private:
-	void calculateBestMoves(int depth);
 	void initPieceVector(const std::string& board);
 	bool exposeToCheck(const King* king);
 	Piece* getPieceAt(const std::string& pos);
