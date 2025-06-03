@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include "InvalidMoveException.h"
 
 class Move {
    
@@ -16,6 +17,7 @@ public:
     void setScore(const int newScore);
     std::string getDesPosition()const;
     std::string getFromPosition()const;
+    bool isValid() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Move& move);
 

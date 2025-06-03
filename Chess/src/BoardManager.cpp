@@ -1,5 +1,7 @@
 #include "BoardManager.h"
 #include "designPatterns/factory/PieceFactory.h"
+#include "EmptyQueuExeption.h"
+#include "InvalidMoveException.h"
 
 //=========================================================
 /*
@@ -245,7 +247,10 @@ void BoardManager::printBestMovesOfDepth()
 	{
 		m_bmc->printPriorityQueue();
 	}
-	catch (const std::exception& e)
+	catch (const InvalidMoveException& e) {
+		std::cout << e.what() << std::endl;
+	}
+	catch (const EmptyQueuExeption& e)
 	{
 		std::cout<<e.what()<<std::endl;
 	}

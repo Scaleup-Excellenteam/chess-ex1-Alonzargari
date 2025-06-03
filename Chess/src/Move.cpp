@@ -24,8 +24,14 @@ std::string Move::getFromPosition() const
 {
 	return m_from;
 }
+bool Move::isValid() const {
+	return m_from != m_to;
+}
 
 std::ostream& operator<<(std::ostream& os, const Move& move) {
+	if (!move.isValid()) {
+		throw InvalidMoveException("Invalid move: one of the moves is not correct.");
+	}
 	os << "From: " << move.m_from << ", To: " << move.m_to << ", Score: " << move.m_score;
 	return os;
 }

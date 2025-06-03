@@ -35,10 +35,15 @@ void BestMovesCalculator::calculateBestMoves(int maxDepth, const std::string& cu
                 calculatedDepthesScore = evaluateBestMoveRecursive(boardCtx, 1, maxDepth, opponentColor, !isMyTurn);
 
             }
-            int totalMoveScore = move->getScore()-calculatedDepthesScore;
-            move->setScore(totalMoveScore);
-
-            updatePriorityQueue(std::move(move));
+            move->setScore(move->getScore() + calculatedDepthesScore);
+            try
+            {
+                updatePriorityQueue(std::move(move));
+            }
+            catch (const std::exception& e)
+            {
+                std::cout << e.what() << std::endl;
+            }
 
             piece->setPosition(originalPos);
             restoreBoard(); 
@@ -63,40 +68,52 @@ int BestMovesCalculator::evaluateBestMoveRecursive(const BoardContext& boardCtx,
     //like in instructions when we get to base of the recursive we return the biggest score of the opponent 
     //in the folds we substract this score 
     if (depth >= maxDepth) {
-        int curHighestScore = 0;
+        int bestAtLeaf = isMyTurn ? INT_MIN : INT_MAX;
         auto myPieces = getPiecesOfColor(currentColor);
         for (auto piece : myPieces) {
             auto moves = evaluateAllMoves(piece, boardCtx);
-            for (auto & move : moves) {
-                curHighestScore = std::max(curHighestScore, move->getScore());
+            for (auto& move : moves) {
+                int score = move->getScore();
+                bestAtLeaf = isMyTurn
+                    ? std::max(bestAtLeaf, score)
+                    : std::min(bestAtLeaf, score);
             }
         }
-        return curHighestScore;
+        return bestAtLeaf == INT_MIN || bestAtLeaf == INT_MAX ? 0 : bestAtLeaf;
     }
 
-    int bestScore = 0;
+    int bestScore = isMyTurn ? INT_MIN : INT_MAX;
+
     auto myPieces = getPiecesOfColor(currentColor);
-    int scoreCalc = 0;
+    std::string opponentColor = (currentColor == "White") ? "Black" : "White";
+
     for (auto piece : myPieces) {
         auto moves = evaluateAllMoves(piece, boardCtx);
-        for (auto & move : moves) {
+        for (auto& move : moves) {
             std::string originalPos = piece->getPosition();
             piece->setPosition(move->getDesPosition());
 
-            std::string opponentColor = (currentColor == "White") ? "Black" : "White";
-            int curDepthScore = evaluateBestMoveRecursive(boardCtx, depth + 1, maxDepth, opponentColor,!isMyTurn);
+            int totalScore = move->getScore();
 
-            scoreCalc = isMyTurn
-                ? move->getScore() + curDepthScore
-                : move->getScore() - curDepthScore;
-            bestScore = std::max(bestScore, scoreCalc);
+            int futureScore = evaluateBestMoveRecursive(boardCtx, depth + 1, maxDepth, opponentColor, !isMyTurn);
 
+            int eval = isMyTurn
+                ? totalScore + futureScore
+                : totalScore - futureScore;
+
+            if (isMyTurn)
+                bestScore = std::max(bestScore, eval);
+            else
+                bestScore = std::min(bestScore, eval);
+            if (depth == 1) {
+                std::cout << "Move: " << move->getFromPosition() << " -> " << move->getDesPosition() << ", totalScore: " << totalScore << ", futureScore: " << futureScore << ", eval: " << eval << std::endl;
+            }
             piece->setPosition(originalPos);
             restoreBoard();
         }
     }
 
-    return bestScore = std::max(bestScore, scoreCalc);;
+    return bestScore;
 }
 //=========================================================
 std::vector<Piece*> BestMovesCalculator::getPiecesOfColor(const std::string& color)
@@ -156,7 +173,7 @@ std::vector<std::unique_ptr<Move>> BestMovesCalculator::evaluateAllMoves(Piece* 
             
             score += evaluateThreatToStrongerEnemies(piece, enemyPieces, boardCtx,desPos);
             score += evaluateIfCaptureEnemy(piece, enemyPieces,desPos);
-            score = score > 0 ? score - std::abs(evaluateRiskFromWeakerEnemies(piece, enemyPieces, boardCtx)): score;
+            score = score > 0 ? score - evaluateRiskFromWeakerEnemies(piece, enemyPieces, boardCtx): score;
 
             moves.push_back(std::make_unique<Move>(from, desPos, score));
         }
@@ -197,6 +214,9 @@ int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std
 {
     int reward = 0;
 
+    std::string originalPos = piece->getPosition();
+    piece->setPosition(desPos);
+
     for (const auto& enemy : enemyPieces) {
         if (enemy->getPieceRank() <= piece->getPieceRank()) continue;
         if (enemy->toErase()) continue;
@@ -205,10 +225,12 @@ int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std
 
         if (piece->canDoStep(enemyPos, true)) {
             if (piece->ignorePath() || boardCtx.PathIsClearFunc(desPos, enemyPos)) {
-                reward += enemy->getPieceRank();  
+                reward += enemy->getPieceRank();
             }
         }
     }
+
+    piece->setPosition(originalPos);
 
     return reward;
 }
