@@ -105,9 +105,7 @@ int BestMovesCalculator::evaluateBestMoveRecursive(const BoardContext& boardCtx,
                 bestScore = std::max(bestScore, eval);
             else
                 bestScore = std::min(bestScore, eval);
-            if (depth == 1) {
-                std::cout << "Move: " << move->getFromPosition() << " -> " << move->getDesPosition() << ", totalScore: " << totalScore << ", futureScore: " << futureScore << ", eval: " << eval << std::endl;
-            }
+
             piece->setPosition(originalPos);
             restoreBoard();
         }
@@ -210,7 +208,8 @@ int BestMovesCalculator::evaluateRiskFromWeakerEnemies(Piece* piece, const std::
     return penalty;
 }
 //=========================================================
-int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std::vector<Piece*>& enemyPieces, const BoardContext& boardCtx,const std::string& desPos)
+int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std::vector<Piece*>& enemyPieces,
+                                                        const BoardContext& boardCtx,const std::string& desPos)
 {
     int reward = 0;
 
