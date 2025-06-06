@@ -1,7 +1,11 @@
 #include "BestMovesCalculator.h"
 #include "BoardManager.h"
 
-
+//=========================================================
+/**
+ * Stores the given list of pieces into the calculator.
+ * Converts from unique_ptr to raw pointers for easier access.
+ */
 
 void BestMovesCalculator::setPieces(const std::vector<std::unique_ptr<Piece>>& pieces) {
     m_pieces.clear();
@@ -9,6 +13,7 @@ void BestMovesCalculator::setPieces(const std::vector<std::unique_ptr<Piece>>& p
         m_pieces.push_back(p.get()); 
     }
 }
+
 //=========================================================
 /**
  * Calculates the best moves for the current player and stores them in a priority queue.
@@ -63,6 +68,7 @@ void BestMovesCalculator::calculateBestMoves(int maxDepth, const std::string& cu
  * - If it's the opponent's turn: Subtract your move score from the recursive result.
  * This approach estimates the net impact of a move considering opponent responses up to maxDepth.
  */
+
 int BestMovesCalculator::evaluateBestMoveRecursive(const BoardContext& boardCtx, int depth, int maxDepth, const std::string& currentColor,bool isMyTurn)
 {
     //like in instructions when we get to base of the recursive we return the biggest score of the opponent 
@@ -113,7 +119,12 @@ int BestMovesCalculator::evaluateBestMoveRecursive(const BoardContext& boardCtx,
 
     return bestScore;
 }
+
 //=========================================================
+/**
+ * Returns a list of all the pieces that belong to the given color.
+ */
+
 std::vector<Piece*> BestMovesCalculator::getPiecesOfColor(const std::string& color)
 {
     std::vector<Piece*> piecesOfColor;
@@ -124,7 +135,12 @@ std::vector<Piece*> BestMovesCalculator::getPiecesOfColor(const std::string& col
     }
     return piecesOfColor;
 }
+
 //=========================================================
+/**
+ * Resets the board state by clearing "toErase" flags from all pieces.
+ * This ensures the board returns to its proper state after move simulations.
+ */
 
 void BestMovesCalculator::restoreBoard()
 {
@@ -133,13 +149,26 @@ void BestMovesCalculator::restoreBoard()
     }
 }
 //=========================================================
+/**
+ * Clears the internal priority queue of best moves.
+ */
+
 void BestMovesCalculator::clearQueue()
 {
     while (m_priorityQueue.size() != 0) {
         m_priorityQueue.poll();
     }
 }
+
 //=========================================================
+/**
+ * Evaluates all legal moves for the given piece on the current board.
+ * Calculates a score for each move based on:
+ *  - Capturing an enemy (+15 points)
+ *  - Threatening a stronger enemy (adds their rank to score)
+ *  - Being threatened by a weaker enemy (subtracts their rank from score)
+ * Returns a list of possible moves with scores.
+ */
 
 std::vector<std::unique_ptr<Move>> BestMovesCalculator::evaluateAllMoves(Piece* piece, const BoardContext& boardCtx)
 {
@@ -178,7 +207,12 @@ std::vector<std::unique_ptr<Move>> BestMovesCalculator::evaluateAllMoves(Piece* 
     }
     return moves;
 }
+
 //=========================================================
+/**
+ * Prints the current priority queue of best moves.
+ * If the queue is empty, throws an exception.
+ */
 
 void BestMovesCalculator::printPriorityQueue()
 {
@@ -190,7 +224,13 @@ void BestMovesCalculator::printPriorityQueue()
     }
     
 }
+
 //=========================================================
+/**
+ * Checks if this piece is threatened by any weaker enemy.
+ * If yes, returns the rank of the enemy as a penalty to be subtracted from the move score.
+ */
+
 int BestMovesCalculator::evaluateRiskFromWeakerEnemies(Piece* piece, const std::vector<Piece*>& enemyPieces, const BoardContext& boardCtx)
 {
     int penalty = 0;
@@ -207,7 +247,13 @@ int BestMovesCalculator::evaluateRiskFromWeakerEnemies(Piece* piece, const std::
 
     return penalty;
 }
+
 //=========================================================
+/**
+ * Checks if this move will threaten (after moving) a stronger enemy piece.
+ * If yes, adds the rank of the threatened enemy to the score.
+ */
+
 int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std::vector<Piece*>& enemyPieces,
                                                         const BoardContext& boardCtx,const std::string& desPos)
 {
@@ -233,7 +279,13 @@ int BestMovesCalculator::evaluateThreatToStrongerEnemies(Piece* piece, const std
 
     return reward;
 }
+
 //=========================================================
+/**
+ * Checks if this move will result in capturing an enemy piece.
+ * If yes, sets the enemy to be erased and adds 15 points to the move score.
+ */
+
 int BestMovesCalculator::evaluateIfCaptureEnemy(Piece* piece, const std::vector<Piece*>& enemyPieces, const std::string& desPos)
 {
     for (const auto& enemy : enemyPieces) {
@@ -244,7 +296,13 @@ int BestMovesCalculator::evaluateIfCaptureEnemy(Piece* piece, const std::vector<
     }
     return 0;
 }
+
 //========================================================
+/**
+ * Adds a new move to the priority queue of best moves.
+ * If the queue is full (more than 5), removes the lowest-priority move first.
+ */
+
 void BestMovesCalculator::updatePriorityQueue(std::unique_ptr<Move> move) {
     if (m_priorityQueue.size() < 5) {
         m_priorityQueue.push(std::move(move));

@@ -206,6 +206,11 @@ bool BoardManager::pathIsClear(const std::string& curPos, const std::string& des
 	return true;
 }
 //=========================================================
+/**
+ * Returns a pointer to the piece located at the given position.
+ * If no piece exists at that position, returns nullptr.
+ */
+
 Piece* BoardManager::getPieceAt(const std::string& pos)
 {
 	for (const auto& piece : m_pieces) {
@@ -215,7 +220,14 @@ Piece* BoardManager::getPieceAt(const std::string& pos)
 	}
 	return nullptr;
 }
+
 //=========================================================
+/**
+ * Checks if there is an enemy piece at the specified position,
+ * relative to the current player's team color.
+ * Returns true if an enemy piece is found, otherwise false.
+ */
+
 bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& currentTeam)
 {
 	auto piece = getPieceAt(pos);
@@ -223,6 +235,12 @@ bool BoardManager::isEnemyAtPosition(const std::string& pos, const std::string& 
 }
 
 //========================================================
+/**
+ * Checks if the given destination position is occupied by a piece
+ * from the current player's team.
+ * Returns true if blocked by own piece, otherwise false.
+ */
+
 bool BoardManager::blockedByOwnPlayer(const std::string& pieceDestinitionInput)
 {
 	auto piece = getPieceAt(pieceDestinitionInput);
@@ -230,6 +248,11 @@ bool BoardManager::blockedByOwnPlayer(const std::string& pieceDestinitionInput)
 }
 
 //========================================================
+/**
+ * Calculates the best moves for the current player using the specified depth.
+ * Sets up context functions used by BestMovesCalculator.
+ */
+
 void BoardManager::calculateBestMoves(int depth)
 {
 	m_bmc->setPieces(m_pieces);
@@ -240,7 +263,13 @@ void BoardManager::calculateBestMoves(int depth)
 	};
 	m_bmc->calculateBestMoves(depth,m_currentColorTurn , boardCtx,true);
 }
+
 //========================================================
+/**
+ * Prints the best moves calculated by BestMovesCalculator.
+ * Catches and handles exceptions if the priority queue is empty or if an invalid move is found.
+ */
+
 void BoardManager::printBestMovesOfDepth()
 {
 	try
