@@ -33,10 +33,13 @@ int main()
 		*/
 
 		/**/ 
-		{ // put your code here instead that code
+		{ 
 			codeResponse=boardManger.manageMovment(res);
-			boardManger.calculateBestMoves(depth);
-			//cin >> codeResponse;
+			//to prevent the algorithm to be activate if the codeResponse is invalid move
+			if (codeResponse == 41 || codeResponse == 42)
+			{
+				boardManger.calculateBestMoves(depth);
+			}			//cin >> codeResponse;
 		}
 		/**/
 		

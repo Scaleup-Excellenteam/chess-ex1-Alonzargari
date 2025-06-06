@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "InvalidMoveException.h"
+#include <memory>
 
 class Move {
    
