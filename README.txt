@@ -4,30 +4,47 @@ id: 208626515
 
 ---- Program info ----
 Description
-This program implements the logic for a simple chess game. Based on the player's
-input (the move), the program returns a response code indicating whether the move
- is legal or violates any rules.
 
-The checks include:
-Whether the piece being moved belongs to the opponent.
-Whether the destination square is occupied by the player's own piece.
-Whether the move is legal according to the piece's rules.
-Whether the path is blocked by another piece.
-Whether the move results in the player's own king being in check.
-A simple graphical engine is already provided, and it will perform or ignore the move 
-based on the response code returned.
+Description
+This is a continuation of Exercise 1. In this task, we implemented an algorithm that suggests the top 3 best moves for the current player based on a certain depth.
 
-Response Codes
- Illegal Move Codes:
-11 – No piece on the source square.
-12 – The piece on the source square belongs to the opponent.
-13 – The destination square contains one of the player's own pieces.
-21 – The move is not valid for the piece (e.g., a rook moving diagonally) or the piece is blocked.
-31 – The move would result in the player's own king being in check.
+Algorithm Summary
+The algorithm helps the player find the 3 best moves by looking a 
+few turns ahead and checking how good each move could be, based on what the opponent might do in return.
+It works like this:
+For each piece the player has, we check all the legal moves it can make.
+For each move:
+We "pretend" to make the move on the board.
+Then, we let the opponent take their turn by running the same logic again (this is done using recursion).
+This continues until we reach a set depth (maxDepth), which limits how far ahead we look.
 
-Legal Move Codes:
-42 – Legal move. The piece will be moved from the source square to the destination, and the turn will switch.
-41 – Legal move that causes check. The piece will be moved, the turn will change, and a message will show that check occurred.
+Score method:
+Once we reach that depth, we calculate the score for the move based on three rules:
+If the move causes the piece to be threatened by an enemy with a lower rank, we subtract the enemy's rank from the score.
+If the move results in capturing an opponent, we add 15 points.
+If the move causes a threat to an enemy with a higher rank, we add the enemy’s rank to the score.
+
+While the function returns from each recursive level, it subtracts the opponent’s best score from the current move’s score — so we know how risky the move is.
+In the end, the algorithm returns the 3 moves with the highest scores.
+
+Recursive Flow Example:
+Depth 0: It’s White’s turn. Evaluate all White moves and call the function again for each.
+Depth 1: It’s Black’s turn. Evaluate all Black moves and call the function again for each.
+Depth 2: Back to White. This is the maximum depth, so return the best score White can get.
+As we return from the recursion:
+Black subtracts White’s score from his move.
+Then White subtracts that result from his move to see how good it really is.
+
+Time Complexity
+The time complexity of this algorithm is O(b^d), where:
+b = average number of possible moves per turn
+d = number of turns we look ahead (the depth)
+In the best case (when better moves are evaluated first), the number of calculations can be reduced, and the time complexity can drop to about O(b^(d/2)).
+
+Exceptions:
+in this exceresice i decided to implement two types of exceptions :
+1. empty queue exception - if the the queue i empty we will notice the player 
+2. invalid move exception - activated if one of the moves is not valid ( if the from position == to position) 
 
 
 ---- Files In Chess Directory ----
@@ -48,104 +65,20 @@ Knight.h/cpp-contain Knight movments inheritance from piece - register himself t
 Rook.h/cpp-contain Rook movments inheritance from piece- register himself to factory map
 Queen.h/cpp-contain Queen movments inheritance from piece- register himself to factory map
 Runner.h/cpp-contain Runner movments inheritance from piece- register himself to factory map
+BestMoveCalculator.h/cpp- contain the recursive algorithem to calculate the best moves
+Moves.h/cpp - the data structure to represent the move that in the priority queue
+PririorityQueue.h - template implementation of priorty queue using std::list and comperator
+InvalidMoveException.h/cpp - the exception that inheritance from std::exception and raise exception about invalid move in the queue
+EmptyQueueException.h/cpp - the exception that inheritance from std::exception and raise exception about empty queue
+
 
 ---- Bugs ----
 
 ---- Notes ----
-1) I implemented the knight piece -BOUNUS PIECE
-2) No Pawn
+1)there might be negative score in the best move
+2) Note about depth limit:
+In the exercise instructions, it is stated that the checker will test the program with a depth of up to 2 (which means looking ahead up to 3 turns in total).
+If the checker tries to use a higher depth, the program may take a long time to calculate the best moves, since the number of possible game states increases quickly with each level of depth.
 
 
 
-
-
-🎯 סיכום אלגוריתם — שחמט: בחירת המהלך הטוב ביותר
-עברית
-האלגוריתם מחשב את המהלך הטוב ביותר על פי חישוב עומק רקורסיבי (depth-based recursive evaluation), עד עומק מסוים (maxDepth), תוך כדי התחשבות במהלך הטוב ביותר שהיריב יכול לעשות בתגובה.
-
-שלבי האלגוריתם:
-
-עבור כל חתיכה של השחקן הנוכחי, אנו מחשבים את כל המהלכים החוקיים האפשריים (evaluateAllMoves).
-
-עבור כל מהלך:
-
-מזיזים זמנית את החתיכה אל המיקום של המהלך.
-
-קוראים לרקורסיה לעומק הבא (depth + 1) כאשר כעת תור היריב.
-
-אם הגענו לעומק מקסימלי (בסיס הרקורסיה), מחזירים את הניקוד הכי גבוה שהיריב יכול להשיג.
-
-בקיפול הרקורסיה:
-
-אנו מחסרים את הציון הכי טוב של היריב מהציון של המהלך הנוכחי.
-
-שומרים את המהלך שמביא לתוצאה נטו הכי גבוהה.
-
-מחזירים את הציון נטו הכי טוב שמצאנו.
-
-דוגמה של הרקורסיה:
-
-עומק 0: השחקן הלבן.
-
-בודקים מהלכים אפשריים לחתיכות הלבנות.
-
-עבור כל מהלך של לבן, נכנסים לעומק 1.
-
-עומק 1: תור השחור.
-
-מחשבים מהלכים לשחור.
-
-עבור כל מהלך של שחור נכנסים לעומק 2.
-
-עומק 2: תור הלבן (במקרה הזה maxDepth הושג).
-
-מחזירים את הציון הכי טוב של הלבן.
-
-בקיפול: השחור מחסר את הציון הזה מהציון של המהלך שלו.
-
-חוזרים לעומק 0, שם הלבן מחסר את התוצאה מהמהלך שלו כדי להבין כמה נזק היריב יכול היה לגרום.
-
-🧠 Algorithm Summary — English
-The algorithm computes the best move for a player using a depth-based recursive evaluation up to a defined maximum depth (maxDepth). The core idea is to evaluate how good each move is by subtracting the best possible counter-move the opponent can make in response.
-
-Algorithm steps:
-
-For each piece belonging to the current player, generate all legal moves (evaluateAllMoves).
-
-For every possible move:
-
-Temporarily move the piece to the destination square.
-
-Recursively call the same function for the opponent (i.e., switch turn).
-
-If the maximum depth has been reached (base case), return the highest score the current player can achieve from available moves.
-
-In each recursive return (fold):
-
-Subtract the opponent’s best possible score from the current move’s score.
-
-Keep track of the move with the best resulting net score.
-
-Finally, return the highest net score among all possible moves.
-
-Recursive flow example:
-
-Depth 0: White’s turn.
-
-Evaluate all possible white moves.
-
-For each move, proceed to depth 1.
-
-Depth 1: Black’s turn.
-
-Evaluate all possible black moves.
-
-For each move, proceed to depth 2.
-
-Depth 2: White’s turn again (max depth reached).
-
-Return the highest score white can get from available moves.
-
-In folding: black subtracts this score from his own move score.
-
-Then white subtracts that result from his original move score to evaluate how good his original move really is.
