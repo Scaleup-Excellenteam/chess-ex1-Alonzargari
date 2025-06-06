@@ -2,6 +2,7 @@
 #include <list>
 #include <iostream>
 #include <algorithm>
+#include <memory>
 
 template<typename T>
 struct MyComparator {
